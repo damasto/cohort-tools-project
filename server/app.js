@@ -111,7 +111,7 @@ app.delete("/api/cohorts/:cohortId", async (req, res) => {
 
 app.get("/api/students", async (req, res) => {
   try {
-    const students = await Student.find();
+    const students = await Student.find().populate("cohort");
     res.json(students)
   } catch (err) {
     res.status(500).json({message: err.message})
@@ -133,7 +133,7 @@ app.get("/api/students/cohort/:cohortId", async (req, res) => {
   const {cohortId} = req.params;
 
   try{
-    const students = await Student.find({cohort: cohortId});
+    const students = await Student.find({cohort: cohortId}).populate("cohort");
     res.status(200).json(students);
   } catch (err) {
     res.status(400).json({message: err.message});
@@ -145,7 +145,7 @@ app.get("/api/students/:studentId", async (req, res) => {
   const {studentId} = req.params;
 
   try {
-    const student = await Student.findById(studentId);
+    const student = await Student.findById(studentId).populate("cohort");
     res.status(200).json(student);
   } catch (err) {
     res.status(400).json({message: err.message});
