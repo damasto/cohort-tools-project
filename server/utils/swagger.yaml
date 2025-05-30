@@ -1,0 +1,298 @@
+openapi: 3.1.0
+info:
+  title: Chort Tools Api
+  version: 1.0.0
+  description: API documation for managing Ironhack cohorts and students
+
+
+servers:
+  - url: http://localhost:5005/
+
+
+paths:
+  /api/cohorts:
+    get:
+      summary: Get all cohorts
+      responses:
+        "200":
+          description: A list of all cohorts
+    post:
+      summary: Create a cohort
+      responses:
+        "201":
+          description: Cohort created
+
+
+  /api/cohorts/{cohortId}:
+    get:
+      summary: Get a single cohort
+      parameters:
+        - in: path
+          name: cohortId
+          required: true
+          schema:
+            type: string
+          description: Id of the cohort to get
+      responses:
+        "200":
+          description: Cohort found
+        "404":
+          description: Not found
+    put:
+      summary: Update cohort
+      parameters:
+        - in: path
+          name: cohortId
+          required: true
+          schema:
+            type: string
+          description: Id of the cohort to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Cohort"
+      responses:
+        "200":
+          description: Cohort updated
+        "404":
+          description: Not found
+    delete:
+      summary: Delete cohort
+      parameters:
+        - in: path
+          name: cohortId
+          required: true
+          schema:
+            type: string
+          description: Id of cohort to be deleted
+      responses:
+        "200":
+          description: Cohort deleted
+        "404":
+          description: Not found
+  /api/students:
+    get: 
+      summary: Get all students
+      responses:
+        "200":
+          description: List of all students
+    post:
+      summary: Create new student
+      responses:
+        "200":
+          description: New student created
+  /api/students/cohort/{cohortId}:
+    get:
+      summary: Gets students of a specific cohort
+      parameters:
+        - in: path
+          name: cohortId
+          required: true
+          schema:
+            type: string
+            description: Id of cohort which's students you want to see
+      responses:
+        "200":
+          description: List of students enrolled in a specific cohort
+        "400":
+          description: Not found
+  /api/students/{studentId}:
+    get:
+      summary: Gets a specific student
+      parameters:
+        - in: path
+          name: studentId
+          required: true
+          schema:
+            type: string
+            description: Id of the student to get
+      responses:
+        "200":
+          description: Student found
+        "400":
+          description: Not found
+    put:
+      summary: Update a specific student
+      parameters:
+        - in: path
+          name: studentId
+          required: true
+          schema: 
+            type: string
+            description: Id of student to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Student"
+      responses:
+        "200":
+          description: Student updated
+        "400":
+          description: Not found
+    delete:
+      summary: Delete a specific student
+      parameters: 
+        - in: path
+          name: studentId
+          required: true
+          schema:
+            type: string
+            description: Id of student to be deleted
+      responses:
+        "200":
+          description: Student deleted
+        "400":
+          description: Not found
+  /signup:
+    post:
+      summary: Creates a new user
+      responses:
+        "201":
+          description: New user created
+        "500":
+          description: Internal server error
+
+
+components:
+  schemas:
+    Cohort:
+      type: object
+      required:
+        - cohortSlug
+        - cohortName
+        - programManager
+        - leadTeacher
+        - _id
+      properties:
+        _id:
+          type: string
+          format: uuid
+          description: The MongoDB ObjectId
+          example: 60d0fe4f5311236168a109ca
+        cohortSlug:
+          type: string
+          example: "ft-wd-paris-2023-07-03"
+        cohortName:
+          type: string
+          example: "FT WD PARIS 2023 07"
+        program:
+          type: string
+          enum: ["Web Dev", "UX/UI", "Data Analytics", "Cybersecurity"]
+          example: Web Dev
+        format:
+          type: string
+          enum: ["Full Time", "Part Time"]
+          example: Full Time
+        campus:
+          type: string
+          enum: ["Madrid", "Barcelona", "Miami", "Paris", "Berlin", "Amsterdam", "Lisbon", "Remote"]
+          example: Remote
+        startDate:
+          type: string
+          format: date
+          example: "2025/05/30"
+        endDate:
+          type: string
+          format: date
+          example: "2026/05/30"
+        inProgress:
+          type: boolean
+          default: false
+          example: true
+        programManager:
+          type: string
+          example: Max Musterman
+        leadTeacher:
+          type: string
+          example: Fulano De Tal
+        totalHours:
+          type: number
+          default: 360
+          example: 160
+    Student:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - phone
+      properties:
+        _id:
+          type: string
+          format: uuid
+          description: The auto-generated MongoDB ObjectId
+          example: 60d0fe4f5311236168a109ca
+
+        firstName:
+          type: string
+          description: The student's first name
+          example: Vera
+
+        lastName:
+          type: string
+          description: The student's last name
+          example: Wang
+
+        email:
+          type: string
+          format: email
+          description: Unique email address (must be unique)
+          example: test@example.com
+
+        phone:
+          type: string
+          description: Contact number
+          example: "+34 612 345 678"
+
+        linkedinUrl:
+          type: string
+          description: LinkedIn profile URL
+          example: https://linkedin.com/test
+
+        languages:
+          type: array
+          description: Languages spoken
+          items:
+            type: string
+            enum: ["English", "Spanish", "French", "German", "Portuguese", "Dutch", "Other"]
+
+        program:
+          type: string
+          enum: ["Web Dev", "UX/UI", "Data Analytics", "Cybersecurity"]
+          description: Program enrolled
+
+        background:
+          type: string
+          description: Academic or professional background
+          example: "Business Administration"
+
+        image:
+          type: string
+          description: Profile image URL
+          example: https://i.imgur.com/r8bo8u7.png
+
+        cohort:
+          type: string
+          format: uuid
+          description: ObjectId referencing the cohort
+
+        projects:
+          type: array
+          description: Array of student project objects
+          items:
+            type: object
+    
+
+
+    
+  
+
+
+
+  
+
+          

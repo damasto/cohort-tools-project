@@ -1,12 +1,19 @@
+//IMPORTS
 const express = require("express");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
-
-//cors middleware
+const mongoose = require("mongoose");
 const cors = require("cors");
-const origins = ["http://localhost:5173"]
+const swaggerUi = require("swagger-ui-express");
+const helmet = require("helmet");
+const session = require("express-session");
+const YAML = require("yamljs");
 
-const mongoose = require("mongoose")
+const swaggerDocument = YAML.load("./utils/swagger.yaml")
+
+//Allowed origins for CORS
+const origins = ["http://localhost:5173"];
+
 
 //Router
 const apiRouter = require("./routes/api.routes");
@@ -44,14 +51,33 @@ app.use(express.urlencoded({ extended: false }));
 //Parses cookies attached to client requests into req.cookies
 app.use(cookieParser());
 
+app.use(helmet());
+app.disable("x-powered-by'");
+app.set("trust-proxy", 1);
+app.use(session({
+  secret: "s3Cur3",
+  name: "sessionId",
+  saveUninitialized: true,
+  resave: false,
+}));
+
 //routes
 app.use("/api", apiRouter);
 app.use("/auth", authRouter);
 app.use("/docs", docRouter);
+//Swagger API documentation
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument)
+);
 
 //error handlers
 app.use(errorHandler);
 app.use(notFoundHandler)
+
+//Swagger documentation
+
 
 // START SERVER
 app.listen(PORT, () => {
