@@ -49,10 +49,10 @@ router.get("/", async (req, res, next) => {
   
   router.put("/:studentId", async (req, res, next) => {
     const {studentId} = req.params;
-    const data = req.body;
+    const update = req.body;
   
     try {
-      const updateStudent = await Student.findByIdAndUpdate(studentId, data);
+      const updateStudent = await Student.findByIdAndUpdate(studentId, update, {new: true});
       res.status(200).json(updateStudent)
     } catch (err) {
       next(err);
@@ -64,8 +64,8 @@ router.get("/", async (req, res, next) => {
     const {studentId} = req.params;
   
     try {
-      const deletedStudent = await Student.findByIdAndDelete(studentId);
-      res.status(200).json(deletedStudent);
+      await Student.findByIdAndDelete(studentId);
+      res.status(204);
     } catch (err) {
       next(err)
     }

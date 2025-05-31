@@ -38,10 +38,10 @@ router.post("/", async (req, res, next) => {
 
 router.put("/:cohortId", async (req, res, next) => {
     const { cohortId } = req.params;
-    const data = req.body;
+    const update = req.body;
 
     try {
-        const updateCohort = await Cohort.findByIdAndUpdate(cohortId, data);
+        const updateCohort = await Cohort.findByIdAndUpdate(cohortId, update, {new: true});
         res.status(200).json(updateCohort)
     } catch (err) {
         next(err);
@@ -53,8 +53,8 @@ router.delete("/:cohortId", async (req, res, next) => {
     const { cohortId } = req.params;
 
     try {
-        const deletedCohort = await Cohort.findByIdAndDelete(cohortId);
-        res.status(200).json(deletedCohort);
+        await Cohort.findByIdAndDelete(cohortId);
+        res.status(204);
     } catch (err) {
         next(err);
     }

@@ -4,12 +4,12 @@ const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const swaggerUi = require("swagger-ui-express");
 const helmet = require("helmet");
 const session = require("express-session");
 const YAML = require("yamljs");
-
+const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = YAML.load("./utils/swagger.yaml")
+
 
 //Allowed origins for CORS
 const origins = ["http://localhost:5173"];
@@ -20,6 +20,7 @@ const apiRouter = require("./routes/api.routes");
 const authRouter = require("./routes/auth.routes");
 const docRouter = require("./routes/doc.routes");
 
+
 //custom error handlers
 const {errorHandler, notFoundHandler} = require("./middleware/errorHandling")
 
@@ -27,6 +28,7 @@ const {errorHandler, notFoundHandler} = require("./middleware/errorHandling")
 // INITIALIZE EXPRESS APP
 const app = express();
 const PORT = 5005;
+
 
 //CONNECT TO MongoDB
 mongoose
@@ -51,8 +53,10 @@ app.use(express.urlencoded({ extended: false }));
 //Parses cookies attached to client requests into req.cookies
 app.use(cookieParser());
 
+
+//Enhance security
 app.use(helmet());
-app.disable("x-powered-by'");
+app.disable("x-powered-by'"); //hides which language server is built on
 app.set("trust-proxy", 1);
 app.use(session({
   secret: "s3Cur3",
@@ -60,6 +64,7 @@ app.use(session({
   saveUninitialized: true,
   resave: false,
 }));
+
 
 //routes
 app.use("/api", apiRouter);
@@ -72,11 +77,10 @@ app.use(
   swaggerUi.setup(swaggerDocument)
 );
 
+
 //error handlers
 app.use(errorHandler);
 app.use(notFoundHandler)
-
-//Swagger documentation
 
 
 // START SERVER
