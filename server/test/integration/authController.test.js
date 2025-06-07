@@ -1,7 +1,7 @@
 const request = require("supertest");
 const app = require("../../app");
 const User = require("../../models/User.models")
-console.log("User model:", User);
+
 
 describe("Auth Controller", () => {
     describe("POST /auth/signup", () => {

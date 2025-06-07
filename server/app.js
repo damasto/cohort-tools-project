@@ -81,7 +81,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use(limiter); //prevent brute force attacks
-//app.use(csrf()); //protect against Cross-Site Request Forgery
+//app.use(csrf({cookie: true})); //protect against Cross-Site Request Forgery
 
 
 //routes
