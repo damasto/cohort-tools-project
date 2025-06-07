@@ -38,7 +38,7 @@ router.post('/signup', (req, res, next) => {
         // If the user with the same email already exists, send an error response
         if (foundUser) {
           res.status(400).json({ message: "User already exists." });
-          return;
+          return Promise.reject("User exists");
         }
   
         // If the email is unique, proceed to hash the password
@@ -62,6 +62,7 @@ router.post('/signup', (req, res, next) => {
       })
       .catch(err => {
         console.log(err);
+        if(err === "User exists") return;
         res.status(500).json({ message: "Internal Server Error" })
       });
   });

@@ -54,7 +54,7 @@ router.delete("/:cohortId", async (req, res, next) => {
 
     try {
         await Cohort.findByIdAndDelete(cohortId);
-        res.status(204);
+        res.status(204).end();
     } catch (err) {
         next(err);
     }
