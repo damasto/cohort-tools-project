@@ -32,7 +32,6 @@ paths:
           required: true
           schema:
             type: string
-          description: Id of the cohort to get
       responses:
         "200":
           description: Cohort found
@@ -46,7 +45,6 @@ paths:
           required: true
           schema:
             type: string
-          description: Id of the cohort to update
       requestBody:
         required: true
         content:
@@ -66,7 +64,6 @@ paths:
           required: true
           schema:
             type: string
-          description: Id of cohort to be deleted
       responses:
         "200":
           description: Cohort deleted
@@ -91,8 +88,7 @@ paths:
           name: cohortId
           required: true
           schema:
-            type: string
-            description: Id of cohort which's students you want to see
+            type: string     
       responses:
         "200":
           description: List of students enrolled in a specific cohort
@@ -107,7 +103,6 @@ paths:
           required: true
           schema:
             type: string
-            description: Id of the student to get
       responses:
         "200":
           description: Student found
@@ -121,7 +116,6 @@ paths:
           required: true
           schema: 
             type: string
-            description: Id of student to update
       requestBody:
         required: true
         content:
@@ -141,13 +135,12 @@ paths:
           required: true
           schema:
             type: string
-            description: Id of student to be deleted
       responses:
         "200":
           description: Student deleted
         "400":
           description: Not found
-  /signup:
+  /auth/signup:
     post:
       summary: Creates a new user
       responses:
@@ -155,6 +148,21 @@ paths:
           description: New user created
         "500":
           description: Internal server error
+  /auth/login:
+    post:
+      summary:  Checks user credentials and creates an auth token
+      responses:
+        "200":
+          description: Credentials match, token created
+        "401":
+          description: Unable to authenticate user
+        "500": 
+          description: Internal server error
+  /auth/verify:
+    get:
+      summary: Verifies user toke is valid and decodes payload
+      responses:
+        "200": User object sent
 
 
 components:
@@ -283,8 +291,6 @@ components:
         projects:
           type: array
           description: Array of student project objects
-          items:
-            type: object
     
 
 

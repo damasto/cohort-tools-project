@@ -85,15 +85,16 @@ app.use(limiter); //prevent brute force attacks
 
 
 //routes
-app.use("/api", apiRouter);
-app.use("/auth", authRouter);
-app.use("/docs", docRouter);
-//Swagger API documentation
 app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocument)
 );
+app.use("/api", apiRouter);
+app.use("/auth", authRouter);
+app.use("/docs", docRouter);
+//Swagger API documentation
+
 
 app.get("/ping", (req, res) => {
   res.send("pong")
