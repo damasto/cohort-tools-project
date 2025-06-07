@@ -60,7 +60,6 @@ router.post('/signup', (req, res, next) => {
         res.status(201).json({ user: user });
       })
       .catch(err => {
-        console.log(err);
         if(err === "User exists") return;
         res.status(500).json({ message: "Internal Server Error" })
       });
